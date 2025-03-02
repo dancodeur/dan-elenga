@@ -3,6 +3,6 @@
         <span class="relative w-4 h-4 rounded-full bg-red-500 flex items-center justify-center">
             <span class="absolute inset-0 border-2 border-red-400 rounded-full animate-ping"></span>
         </span>
-        <span class="ml-4 text-sm font-semibold">Recherche d'alternance</span>
+        <span class="ml-4 text-xs md:text-sm font-semibold">Recherche d'alternance</span>
     </div>
 </template>
