@@ -6,13 +6,20 @@
        <div class="col-span-5 bg-card-image" v-gsap.parallax.faster >
        </div>
 
-       <div  v-gsap.parallax.slower-10>
-          <UIcon name="i-simple-icons-github" class="w-[4rem] h-[4rem]" />
+       <div  v-gsap.parallax.slower-10 class="w-[400px]">
+            <h1 class="text-3xl" v-gsap.whenVisible.animateText.slow>{{ title ? title: "Ici le titre du projet" }}</h1>
+            <p class="text-md" v-gsap.whenVisible.animateText.fast>{{ description ? description: "Iici la description du projet" }}</p>
        </div>
     </section>
 
 </template>
 
+<script setup>
+    defineProps({
+        title: String,
+        description: String
+    })
+</script>
 
 <style scoped>
 .bg-card-image {
