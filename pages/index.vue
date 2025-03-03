@@ -9,8 +9,7 @@
     </div>
 
     <JobExperience/>
-
-   
+    <Competences/>
 
 </template>
 

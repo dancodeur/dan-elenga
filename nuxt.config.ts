@@ -13,12 +13,12 @@ export default defineNuxtConfig({
     mode: 'full',
     lazy: true
   },
-  vgsap: {
-    presets: [],
-    breakpoint: 768,
-    scroller: '',
-    composable: true
-  },
+  // vgsap: {
+  //   presets: [],
+  //   breakpoint: 768,
+  //   scroller: '',
+  //   composable: true
+  // }
   css: [
     '~/assets/css/main.css'
   ],

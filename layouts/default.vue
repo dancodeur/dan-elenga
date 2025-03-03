@@ -3,6 +3,9 @@
     <!--Container of page-->
     <UContainer>
       <!--Souris personnalisé-->
+      <!--
+       Color gray : #D3D3D3 / #A9A9A9
+      -->
         <CustomCursor />
         <slot/>
     </UContainer>
@@ -18,10 +21,10 @@ const options = {
   },
   particles: {
     color: {
-      value: '#610FFA',
+      value: '#A9A9A9',
     },
     links: {
-      color: '#672FCF',
+      color: '#D3D3D3',
       enable: true,
     },
     move: {
