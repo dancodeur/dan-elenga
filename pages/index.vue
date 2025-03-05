@@ -10,11 +10,11 @@
                    <div>
                      <a href="/Apprenti Développeur web (1).pdf" target="_blank" class="p-3 bg-green-500 text-slate-50">Télécharger mon cv</a>
                    </div>
-                   <div class="flex-row space-x-3 items-center">
+                   <!-- <div class="flex-row space-x-3 items-center">
                     <UIcon  v-gsap.parallax.faster-30 v-gsap.magnetic.stronger name="i-simple-icons-react" class="w-[6rem] h-[6rem] text-[#61DAFB]" />
                     <UIcon  v-gsap.parallax.faster-40 v-gsap.magnetic.stronger name="i-simple-icons-vuedotjs" class="w-[6rem] h-[6rem] text-[#4FC08D]" />
                     <UIcon  v-gsap.parallax.faster-20 v-gsap.magnetic.stronger name="i-simple-icons-tailwindcss" class="w-[6rem] h-[6rem] text-[#06B6D4]" />
-                   </div>
+                   </div> -->
                 </div>
            </section>
      </div>
