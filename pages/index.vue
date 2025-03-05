@@ -1,6 +1,6 @@
 <template>
      <Header/>
-     <div class="flex flex-col justify-center mt-10">
+     <div class="flex flex-col justify-center min-h-screen">
            <img src="/construction-svgrepo-com.png" alt="en construction image dan elenga" class="md:w-[300px] md:h-[300px] h-[200px] w-[200px] mx-auto" />
            
            <section class="flex flex-col text-center space-y-[3rem]">
