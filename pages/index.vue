@@ -1,26 +1,36 @@
 <template>
-     <div class="flex flex-col justify-center">
-           <img src="/construction-svgrepo-com.png" alt="en construction image dan elenga" class="w-[300px] h-[300px] mx-auto" />
+     <Header/>
+     <div class="flex flex-col justify-center mt-10">
+           <img src="/construction-svgrepo-com.png" alt="en construction image dan elenga" class="md:w-[300px] md:h-[300px] h-[200px] w-[200px] mx-auto" />
            
-           <section class="flex flex-col text-center space-y-6">
-                <h1 class="text-6xl">En construction</h1>
-                <p class="text-xl">Mon portfolio est actuellement en maintenance. Je serai de retour bientôt. Merci de votre patience.</p>
+           <section class="flex flex-col text-center space-y-[3rem]">
+               <div class="space-y-3">
+                    <h1 class="text-4xl md:text-6xl dark:text-slate-50">En maintenance</h1>
+                    <p class=" text-md md:text-xl dark:text-slate-50">Mon portfolio est temporairement en maintenance. J'apporte quelques améliorations pour mieux vous présenter mon travail. 
+                         Merci de votre compréhension et à très bientôt !</p>
+               </div>
 
-                <div class="mx-auto flex flex-row  space-x-6">
-                   <div>
-                     <a href="/Apprenti Développeur web (1).pdf" target="_blank" class="p-3 bg-green-500 text-slate-50">Télécharger mon cv</a>
-                   </div>
-                   <!-- <div class="flex-row space-x-3 items-center">
-                    <UIcon  v-gsap.parallax.faster-30 v-gsap.magnetic.stronger name="i-simple-icons-react" class="w-[6rem] h-[6rem] text-[#61DAFB]" />
-                    <UIcon  v-gsap.parallax.faster-40 v-gsap.magnetic.stronger name="i-simple-icons-vuedotjs" class="w-[6rem] h-[6rem] text-[#4FC08D]" />
-                    <UIcon  v-gsap.parallax.faster-20 v-gsap.magnetic.stronger name="i-simple-icons-tailwindcss" class="w-[6rem] h-[6rem] text-[#06B6D4]" />
-                   </div> -->
-                </div>
+               <div>
+                    <a href="/CV Dan Elenga DevOps.pdf" target="_blank" class="p-3 bg-green-500 text-slate-50 dark:text-white">Télécharger mon cv</a>
+               </div>
+               
+                <div class="flex mx-auto space-x-3 items-center">
+                         <!-- <a href="https://discord.com" target="_blank">
+                             <UIcon v-gsap.magnetic.stronger name="i-simple-icons-discord" class="w-[1.7rem] h-[1.7rem] text-[#4169E1]" />
+                         </a> -->
+                         <a href="https://hub.docker.com/u/dancodeur" target="_blank">
+                             <UIcon v-gsap.magnetic.stronger name="i-simple-icons-docker" class="w-[1.7rem] h-[1.7rem] text-[#2496ED]" />
+                         </a>
+                         <a href="https://github.com/dancodeur" target="_blank">
+                             <UIcon v-gsap.magnetic.stronger name="i-simple-icons-github" class="w-[1.7rem] h-[1.7rem] text-[#181717] dark:text-white" />
+                         </a>
+                         <a href="https://www.linkedin.com/in/dan-elenga-4ab095229/" target="_blank">
+                             <UIcon v-gsap.magnetic.stronger name="i-simple-icons-linkedin" class="w-[1.7rem] h-[1.7rem] text-[#2496ED]" />
+                         </a>
+                 </div>
            </section>
      </div>
 </template>
 
-
 <script setup>
-
 </script>
