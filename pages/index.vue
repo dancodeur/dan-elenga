@@ -5,14 +5,14 @@
            
            <section class="flex flex-col text-center space-y-[3rem]">
                <div class="space-y-3">
-                    <h1 class="text-4xl md:text-6xl dark:text-slate-50">Mon portfolio fait peau neuve ! 🚧</h1>
+                    <h1 class="text-4xl md:text-6xl dark:text-slate-50">Mon portfolio fait peau neuve !</h1>
                     <p class=" text-md md:text-xl dark:text-slate-50">Je bosse sur quelques améliorations pour mieux vous en mettre plein les yeux.
                         À très vite et merci pour votre patience ! ✨</p>
                </div>
 
-               <div>
-                    <a href="/DAN CV.pdf" target="_blank" class="p-3 bg-green-500 text-slate-50 dark:text-white">Mon CV</a>
-                    <a href="/Portfolio 2025 – Dan Elenga.pdf" target="_blank" class="p-3 bg-green-500 text-slate-50 dark:text-white">Mes projets</a>
+               <div class="flex flex-col md:flex-row space-x-3 space-y-3 md:space-y-0 mx-auto items-center justify-center">
+                    <a href="/DAN CV.pdf" target="_blank" class="p-3 bg-green-500 text-slate-50 dark:text-white w-[10rem]">Mon CV</a>
+                    <a href="/Portfolio 2025 – Dan Elenga.pdf" target="_blank" class="p-3 bg-green-500 text-slate-50 dark:text-white w-[10rem]">Mes projets</a>
                </div>
                
                 <div class="flex mx-auto space-x-3 items-center">
