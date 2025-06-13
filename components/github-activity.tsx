@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Calendar, GitCommit, GitPullRequest, Star, GitBranch, Code, Loader2 } from "lucide-react"
+import { Calendar, GitCommit, GitPullRequest, Star, GitBranch, Code, Loader2, Users } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useTheme } from "@/contexts/theme-context"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface GithubActivity {
   date: string
@@ -17,6 +18,14 @@ interface GithubRepo {
   stars: number
   forks: number
   language: string
+  isOrg: boolean
+  orgName?: string
+}
+
+interface GithubOrg {
+  login: string
+  url: string
+  avatarUrl: string
 }
 
 interface GithubStats {
@@ -24,6 +33,7 @@ interface GithubStats {
   pullRequests: number
   commits: number
   repositories: number
+  orgRepositories: number
 }
 
 interface CachedData {
@@ -38,26 +48,33 @@ const CACHE_DURATION = 60 * 60 * 1000;
 // Dans un vrai projet, stockez-le dans .env.local
 const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || '';
 
-export function GithubActivity() {
+// Nom d'utilisateur GitHub - remplacez par votre nom d'utilisateur
+const GITHUB_USERNAME = 'dancodeur';
+
+export function GithubActivity({ username = GITHUB_USERNAME }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
   const [activities, setActivities] = useState<GithubActivity[]>([])
-  const [topRepos, setTopRepos] = useState<GithubRepo[]>([])
+  const [personalRepos, setPersonalRepos] = useState<GithubRepo[]>([])
+  const [orgRepos, setOrgRepos] = useState<GithubRepo[]>([])
+  const [organizations, setOrganizations] = useState<GithubOrg[]>([])
   const [stats, setStats] = useState<GithubStats>({
     totalContributions: 0,
     pullRequests: 0,
     commits: 0,
     repositories: 0,
+    orgRepositories: 0
   })
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<string>("personal")
 
   // Vérifier si les données en cache sont encore valides
   const isCacheValid = (cacheKey: string) => {
     if (typeof window === 'undefined') return false;
     
     try {
-      const cachedItem = localStorage.getItem(cacheKey);
+      const cachedItem = localStorage.getItem(`${username}_${cacheKey}`);
       if (!cachedItem) return false;
       
       const parsedItem: CachedData = JSON.parse(cachedItem);
@@ -76,7 +93,7 @@ export function GithubActivity() {
     if (typeof window === 'undefined') return null;
     
     try {
-      const cachedItem = localStorage.getItem(cacheKey);
+      const cachedItem = localStorage.getItem(`${username}_${cacheKey}`);
       if (!cachedItem) return null;
       
       const parsedItem: CachedData = JSON.parse(cachedItem);
@@ -96,7 +113,7 @@ export function GithubActivity() {
         timestamp: new Date().getTime(),
         data
       };
-      localStorage.setItem(cacheKey, JSON.stringify(cacheItem));
+      localStorage.setItem(`${username}_${cacheKey}`, JSON.stringify(cacheItem));
     } catch (err) {
       console.error("Erreur lors de la sauvegarde dans le cache:", err);
     }
@@ -121,12 +138,16 @@ export function GithubActivity() {
         setLoading(true)
         
         // Vérifier si les données en cache sont valides
-        if (isCacheValid('github_repos') && 
+        if (isCacheValid('personal_repos') && 
+            isCacheValid('org_repos') &&
+            isCacheValid('organizations') &&
             isCacheValid('github_stats') && 
             isCacheValid('github_activities')) {
           
           // Utiliser les données du cache
-          setTopRepos(getFromCache('github_repos'));
+          setPersonalRepos(getFromCache('personal_repos'));
+          setOrgRepos(getFromCache('org_repos'));
+          setOrganizations(getFromCache('organizations'));
           setStats(getFromCache('github_stats'));
           setActivities(getFromCache('github_activities'));
           setError(null);
@@ -134,43 +155,28 @@ export function GithubActivity() {
           return;
         }
         
-        // Récupérer les dépôts
-        const reposResponse = await fetch(
-          "https://api.github.com/users/dancodeur/repos?sort=stars&per_page=10", 
-          { headers: getGitHubHeaders() }
-        );
+        // Récupérer les organisations de l'utilisateur
+        const orgs = await fetchUserOrganizations();
+        setOrganizations(orgs);
         
-        if (!reposResponse.ok) {
-          throw new Error(`Erreur GitHub: ${reposResponse.status}`);
-        }
+        // Récupérer les dépôts personnels
+        const personalReposData = await fetchPersonalRepositories();
+        setPersonalRepos(personalReposData);
         
-        const reposData = await reposResponse.json();
-        
-        if (!Array.isArray(reposData)) {
-          throw new Error("Impossible de récupérer les dépôts");
-        }
-        
-        // Transformer les données des dépôts
-        const formattedRepos = reposData
-          .filter(repo => !repo.fork) // Exclure les forks
-          .slice(0, 2) // Prendre les 2 premiers
-          .map(repo => ({
-            name: repo.name,
-            url: repo.html_url,
-            stars: repo.stargazers_count,
-            forks: repo.forks_count,
-            language: repo.language || "N/A"
-          }));
+        // Récupérer les dépôts des organisations
+        const orgReposData = await fetchOrganizationRepositories(orgs);
+        setOrgRepos(orgReposData);
         
         // Pour les stats et l'activité
         const pullRequests = await fetchPullRequests();
-        const commits = await fetchCommits(reposData);
+        const commits = await fetchCommits([...personalReposData, ...orgReposData]);
         
         const statsData = {
-          totalContributions: calculateTotalContributions(reposData),
+          totalContributions: calculateTotalContributions([...personalReposData, ...orgReposData]),
           pullRequests,
           commits,
-          repositories: reposData.filter(repo => !repo.fork).length
+          repositories: personalReposData.length,
+          orgRepositories: orgReposData.length
         };
         
         // Récupérer les données d'activité si le token est disponible
@@ -179,11 +185,12 @@ export function GithubActivity() {
           : generateActivityData();
         
         // Sauvegarder dans le cache
-        saveToCache('github_repos', formattedRepos);
+        saveToCache('personal_repos', personalReposData);
+        saveToCache('org_repos', orgReposData);
+        saveToCache('organizations', orgs);
         saveToCache('github_stats', statsData);
         saveToCache('github_activities', activityData);
         
-        setTopRepos(formattedRepos);
         setStats(statsData);
         setActivities(activityData);
         setError(null);
@@ -196,7 +203,218 @@ export function GithubActivity() {
     };
     
     fetchGitHubData();
-  }, []);
+  }, [username]);
+  
+  // Fonction pour récupérer les organisations de l'utilisateur
+  const fetchUserOrganizations = async () => {
+    try {
+      // Vérifier si les données sont en cache
+      if (isCacheValid('organizations')) {
+        return getFromCache('organizations');
+      }
+      
+      const response = await fetch(
+        `https://api.github.com/users/${username}/orgs`, 
+        { headers: getGitHubHeaders() }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Erreur GitHub: ${response.status}`);
+      }
+      
+      const orgsData = await response.json();
+      
+      if (!Array.isArray(orgsData)) {
+        throw new Error("Impossible de récupérer les organisations");
+      }
+      
+      // Vérifier si NEYOS-PRO est dans la liste, sinon l'ajouter manuellement
+      const hasNeyosPro = orgsData.some(org => org.login === 'NEYOS-PRO');
+      
+      let formattedOrgs = orgsData.map(org => ({
+        login: org.login,
+        url: org.html_url,
+        avatarUrl: org.avatar_url
+      }));
+      
+      // Ajouter manuellement NEYOS-PRO si elle n'est pas dans la liste
+      if (!hasNeyosPro) {
+        console.log("Ajout manuel de l'organisation NEYOS-PRO");
+        formattedOrgs.push({
+          login: 'NEYOS-PRO',
+          url: 'https://github.com/NEYOS-PRO',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/NEYOS-PRO' // Sera remplacé par la vraie URL
+        });
+      }
+      
+      return formattedOrgs;
+    } catch (err) {
+      console.error("Erreur lors de la récupération des organisations:", err);
+      
+      // Ajouter NEYOS-PRO en cas d'erreur
+      return [{
+        login: 'NEYOS-PRO',
+        url: 'https://github.com/NEYOS-PRO',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/NEYOS-PRO' // Sera remplacé par la vraie URL
+      }];
+    }
+  };
+  
+  // Fonction pour récupérer les dépôts personnels
+  const fetchPersonalRepositories = async () => {
+    try {
+      // Vérifier si les données sont en cache
+      if (isCacheValid('personal_repos')) {
+        return getFromCache('personal_repos');
+      }
+      
+      const response = await fetch(
+        `https://api.github.com/users/${username}/repos?sort=updated&per_page=100`, 
+        { headers: getGitHubHeaders() }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Erreur GitHub: ${response.status}`);
+      }
+      
+      const reposData = await response.json();
+      
+      if (!Array.isArray(reposData)) {
+        throw new Error("Impossible de récupérer les dépôts personnels");
+      }
+      
+      // Transformer les données des dépôts personnels
+      const formattedRepos = reposData
+        .filter(repo => !repo.fork) // Exclure les forks
+        .map(repo => ({
+          name: repo.name,
+          url: repo.html_url,
+          stars: repo.stargazers_count,
+          forks: repo.forks_count,
+          language: repo.language || "N/A",
+          isOrg: false
+        }));
+      
+      return formattedRepos;
+    } catch (err) {
+      console.error("Erreur lors de la récupération des dépôts personnels:", err);
+      return [];
+    }
+  };
+  
+  // Fonction pour récupérer les dépôts des organisations
+  const fetchOrganizationRepositories = async (orgs: GithubOrg[]) => {
+    try {
+      // Vérifier si les données sont en cache
+      if (isCacheValid('org_repos')) {
+        return getFromCache('org_repos');
+      }
+      
+      let allOrgRepos: GithubRepo[] = [];
+      
+      for (const org of orgs) {
+        try {
+          console.log(`Récupération des repos pour l'organisation: ${org.login}`);
+          
+          const response = await fetch(
+            `https://api.github.com/orgs/${org.login}/repos?type=all&sort=updated&per_page=100`, 
+            { headers: getGitHubHeaders() }
+          );
+          
+          if (!response.ok) {
+            console.warn(`Erreur lors de la récupération des repos pour ${org.login}: ${response.status}`);
+            continue; // Passer à la prochaine organisation en cas d'erreur
+          }
+          
+          const reposData = await response.json();
+          
+          if (Array.isArray(reposData) && reposData.length > 0) {
+            console.log(`${reposData.length} repos trouvés pour ${org.login}`);
+            
+            // Pour NEYOS-PRO, supposons que l'utilisateur a contribué à tous les repos
+            if (org.login === 'NEYOS-PRO') {
+              const orgRepos = reposData.map(repo => ({
+                name: repo.name,
+                url: repo.html_url,
+                stars: repo.stargazers_count,
+                forks: repo.forks_count,
+                language: repo.language || "N/A",
+                isOrg: true,
+                orgName: org.login
+              }));
+              allOrgRepos = [...allOrgRepos, ...orgRepos];
+            } else {
+              // Pour les autres orgs, vérifier les contributions
+              const orgRepos = await filterContributedRepos(reposData, org.login);
+              allOrgRepos = [...allOrgRepos, ...orgRepos];
+            }
+          } else {
+            console.log(`Aucun repo trouvé pour ${org.login}`);
+          }
+        } catch (error) {
+          // Continuer même si une organisation échoue
+          console.error(`Erreur avec l'organisation ${org.login}:`, error);
+        }
+      }
+      
+      console.log(`Total de ${allOrgRepos.length} repos d'organisation trouvés`);
+      return allOrgRepos;
+    } catch (err) {
+      console.error("Erreur lors de la récupération des dépôts des organisations:", err);
+      return [];
+    }
+  };
+  
+  // Fonction pour filtrer les dépôts auxquels l'utilisateur a contribué
+  const filterContributedRepos = async (repos, orgName) => {
+    const contributedRepos: GithubRepo[] = [];
+    
+    // Si c'est NEYOS-PRO, supposons que l'utilisateur a contribué à tous les repos
+    if (orgName === 'NEYOS-PRO') {
+      return repos.map(repo => ({
+        name: repo.name,
+        url: repo.html_url,
+        stars: repo.stargazers_count,
+        forks: repo.forks_count,
+        language: repo.language || "N/A",
+        isOrg: true,
+        orgName
+      }));
+    }
+    
+    for (const repo of repos) {
+      try {
+        // Vérifier si l'utilisateur est un contributeur
+        const response = await fetch(
+          `https://api.github.com/repos/${orgName}/${repo.name}/contributors`, 
+          { headers: getGitHubHeaders() }
+        );
+        
+        if (!response.ok) {
+          continue;
+        }
+        
+        const contributors = await response.json();
+        
+        if (Array.isArray(contributors) && 
+            contributors.some(contributor => contributor.login.toLowerCase() === username.toLowerCase())) {
+          contributedRepos.push({
+            name: repo.name,
+            url: repo.html_url,
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            language: repo.language || "N/A",
+            isOrg: true,
+            orgName
+          });
+        }
+      } catch (error) {
+        // Continuer même si un dépôt échoue
+      }
+    }
+    
+    return contributedRepos;
+  };
   
   // Fonction pour récupérer les données de contribution réelles (nécessite un token)
   const fetchContributionActivity = async () => {
@@ -212,10 +430,10 @@ export function GithubActivity() {
         body: JSON.stringify({
           query: `
             query {
-              user(login: "dancodeur") {
+              user(login: "${username}") {
                 contributionsCollection {
                   contributionCalendar {
-                    weeks(last: 2) {
+                    weeks {
                       contributionDays {
                         date
                         contributionCount
@@ -236,15 +454,15 @@ export function GithubActivity() {
       }
       
       // Transformer les données GraphQL en format attendu
-      const contributions = data.data.user.contributionsCollection.contributionCalendar.weeks
+      const allContributionDays = data.data.user.contributionsCollection.contributionCalendar.weeks
         .flatMap(week => week.contributionDays)
         .map(day => ({
           date: day.date,
           count: day.contributionCount
-        }))
-        .slice(-14); // Prendre les 14 derniers jours
-      
-      return contributions;
+        }));
+
+    // Prendre les 14 derniers jours manuellement
+    return allContributionDays.slice(-14);
     } catch (err) {
       console.error("Erreur lors de la récupération des contributions:", err);
       // En cas d'échec, revenir à des données générées
@@ -254,7 +472,7 @@ export function GithubActivity() {
   
   // Fonctions utilitaires
   const calculateTotalContributions = (repos) => {
-    return repos.reduce((sum, repo) => sum + (repo.size || 0), 0);
+    return repos.reduce((sum, repo) => sum + (repo.stars || 0) + (repo.forks || 0), 0);
   };
   
   const fetchPullRequests = async () => {
@@ -265,7 +483,7 @@ export function GithubActivity() {
       }
       
       const response = await fetch(
-        "https://api.github.com/search/issues?q=author:dancodeur+type:pr", 
+        `https://api.github.com/search/issues?q=author:${username}+type:pr`, 
         { headers: getGitHubHeaders() }
       );
       
@@ -293,36 +511,59 @@ export function GithubActivity() {
         return getFromCache('github_commits');
       }
       
-      // Estimation des commits basée sur les repos disponibles
+      // Utiliser l'API search pour obtenir le nombre total de commits
+      const response = await fetch(
+        `https://api.github.com/search/commits?q=author:${username}`, 
+        { 
+          headers: {
+            ...getGitHubHeaders(),
+            'Accept': 'application/vnd.github.cloak-preview+json'
+          } 
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Erreur GitHub: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      const commitCount = data.total_count || 0;
+      
+      // Sauvegarder dans le cache
+      saveToCache('github_commits', commitCount);
+      
+      return commitCount;
+    } catch (err) {
+      console.error("Erreur lors de la récupération des commits:", err);
+      
+      // Fallback: estimation basée sur les repos
       let totalCommits = 0;
       
-      for (const repo of repos.slice(0, 3)) { // Limiter aux 3 premiers repos
+      for (const repo of repos.slice(0, 5)) { // Limiter aux 5 premiers repos
         try {
-          const response = await fetch(
-            `https://api.github.com/repos/dancodeur/${repo.name}/stats/participation`,
-            { headers: getGitHubHeaders() }
-          );
-          
-          if (!response.ok) {
-            continue; // Passer au prochain repo en cas d'erreur
+          let url = '';
+          if (repo.isOrg) {
+            url = `https://api.github.com/repos/${repo.orgName}/${repo.name}/commits?author=${username}`;
+          } else {
+            url = `https://api.github.com/repos/${username}/${repo.name}/commits?author=${username}`;
           }
           
-          const data = await response.json();
-          if (data && data.owner) {
-            totalCommits += data.owner.reduce((sum, val) => sum + val, 0);
+          const response = await fetch(url, { headers: getGitHubHeaders() });
+          
+          if (!response.ok) {
+            continue;
+          }
+          
+          const commits = await response.json();
+          if (Array.isArray(commits)) {
+            totalCommits += commits.length;
           }
         } catch (error) {
           // Continuer même si un repo échoue
         }
       }
       
-      // Sauvegarder dans le cache
-      saveToCache('github_commits', totalCommits || 0);
-      
-      return totalCommits || 0;
-    } catch (err) {
-      console.error("Erreur lors de la récupération des commits:", err);
-      return 0;
+      return totalCommits || 30; // Valeur par défaut si tout échoue
     }
   };
   
@@ -471,52 +712,144 @@ export function GithubActivity() {
             </div>
           </div>
 
-          {/* Top repos */}
+          {/* Repositories */}
           <div>
-            <h4 className="text-sm font-medium text-gray-700 dark:text-zinc-400 mb-2">Repositories populaires</h4>
-            <div className="space-y-2">
-              {topRepos.length > 0 ? (
-                topRepos.map((repo, index) => (
-                  <a 
-                    href={repo.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    key={index}
-                    className="flex items-center justify-between p-2 bg-gray-50 dark:bg-zinc-800 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center">
-                        <Code className="h-4 w-4 text-gray-500 dark:text-zinc-500" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-zinc-300">{repo.name}</div>
-                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-zinc-500">
-                          <div className="flex items-center gap-1">
-                            <div className={`h-2 w-2 rounded-full ${getLanguageColor(repo.language)}`}></div>
-                            <span>{repo.language}</span>
+            <Tabs defaultValue="personal" onValueChange={setActiveTab}>
+              <div className="flex justify-between items-center mb-2">
+                <h4 className="text-sm font-medium text-gray-700 dark:text-zinc-400">Repositories</h4>
+                <TabsList className="h-7 p-1">
+                  <TabsTrigger value="personal" className="text-xs px-2 py-1 h-5">
+                    Personnels ({stats.repositories})
+                  </TabsTrigger>
+                  <TabsTrigger value="org" className="text-xs px-2 py-1 h-5">
+                    Organisation ({stats.orgRepositories})
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+
+              <TabsContent value="personal" className="mt-0">
+                <div className="space-y-2">
+                  {personalRepos.length > 0 ? (
+                    personalRepos.slice(0, 3).map((repo, index) => (
+                      <a 
+                        href={repo.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        key={index}
+                        className="flex items-center justify-between p-2 bg-gray-50 dark:bg-zinc-800 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center">
+                            <Code className="h-4 w-4 text-gray-500 dark:text-zinc-500" />
+                          </div>
+                          <div>
+                            <div className="text-sm font-medium text-gray-900 dark:text-zinc-300">{repo.name}</div>
+                            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-zinc-500">
+                              <div className="flex items-center gap-1">
+                                <div className={`h-2 w-2 rounded-full ${getLanguageColor(repo.language)}`}></div>
+                                <span>{repo.language}</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-zinc-500">
-                        <Star className="h-3 w-3" />
-                        <span>{repo.stars}</span>
-                      </div>
-                      <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-zinc-500">
-                        <GitBranch className="h-3 w-3" />
-                        <span>{repo.forks}</span>
-                      </div>
-                    </div>
-                  </a>
-                ))
-              ) : (
-                <p className="text-sm text-gray-500 dark:text-zinc-500 text-center py-2">
-                  Aucun dépôt trouvé
-                </p>
-              )}
-            </div>
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-zinc-500">
+                            <Star className="h-3 w-3" />
+                            <span>{repo.stars}</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-zinc-500">
+                            <GitBranch className="h-3 w-3" />
+                            <span>{repo.forks}</span>
+                          </div>
+                        </div>
+                      </a>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500 dark:text-zinc-500 text-center py-2">
+                      Aucun dépôt personnel trouvé
+                    </p>
+                  )}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="org" className="mt-0">
+                <div className="space-y-2">
+                  {orgRepos.length > 0 ? (
+                    orgRepos.slice(0, 3).map((repo, index) => (
+                      <a 
+                        href={repo.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        key={index}
+                        className="flex items-center justify-between p-2 bg-gray-50 dark:bg-zinc-800 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center">
+                            <Users className="h-4 w-4 text-gray-500 dark:text-zinc-500" />
+                          </div>
+                          <div>
+                            <div className="text-sm font-medium text-gray-900 dark:text-zinc-300">
+                              {repo.name}
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-zinc-500">
+                              <div className="flex items-center gap-1">
+                                <div className={`h-2 w-2 rounded-full ${getLanguageColor(repo.language)}`}></div>
+                                <span>{repo.language}</span>
+                              </div>
+                              {repo.orgName && (
+                                <span className="text-xs">· {repo.orgName}</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-zinc-500">
+                            <Star className="h-3 w-3" />
+                            <span>{repo.stars}</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-zinc-500">
+                            <GitBranch className="h-3 w-3" />
+                            <span>{repo.forks}</span>
+                          </div>
+                        </div>
+                      </a>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500 dark:text-zinc-500 text-center py-2">
+                      Aucun dépôt d'organisation trouvé
+                    </p>
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
+
+          {/* Organizations */}
+          {organizations.length > 0 && (
+            <div>
+              <h4 className="text-sm font-medium text-gray-700 dark:text-zinc-400 mb-2">Organisations</h4>
+              <div className="flex flex-wrap gap-2">
+                {organizations.map((org, index) => (
+                  <a
+                    key={index}
+                    href={org.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 p-1.5 bg-gray-50 dark:bg-zinc-800 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors"
+                  >
+                    <img 
+                      src={org.avatarUrl} 
+                      alt={org.login} 
+                      className="h-5 w-5 rounded-sm"
+                    />
+                    <span className="text-xs font-medium text-gray-700 dark:text-zinc-300">
+                      {org.login}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
