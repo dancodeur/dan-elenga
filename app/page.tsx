@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950 text-gray-900 dark:text-zinc-300">
       {/* Header */}
-      <header className="relative h-screen flex flex-col items-center justify-center text-center px-4">
+      <header className="relative min-h-screen flex flex-col items-center justify-center text-center px-4">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-100 to-white dark:from-zinc-900 dark:to-zinc-950" />
 
         {/* Theme & Language Switcher */}
@@ -75,13 +75,13 @@ export default function Home() {
           className="mt-6 animate-fade-in animation-delay-400 bg-gray-900 hover:bg-gray-800 text-white dark:bg-zinc-800 dark:hover:bg-zinc-700"
           asChild
         >
-          <Link href="/Dan ELENGA APPRENTI DÉVELOPPEUR WEB FULL STACK NEYOS - OPS.pdf" download>
+          <Link href="/Dan Elenga - CV.pdf " download>
             {t("downloadCV", "header")}
           </Link>
         </Button>
 
         {/* GitHub Activity */}
-        <div className="mt-12 w-full max-w-md animate-fade-in animation-delay-500">
+        <div className="mt-12 w-full hidden md:block max-w-md animate-fade-in animation-delay-500">
           <GithubActivity />
         </div>
 
@@ -98,6 +98,11 @@ export default function Home() {
           </Button>
         </div>
       </header>
+
+      {/* GitHub Activity */}
+      <div className="mt-12 w- md:hidden  flex flex-col items-center justify-center px-4 max-w-md animate-fade-in animation-delay-500">
+        <GithubActivity/>
+      </div>
 
       {/* Experiences Section avec timeline alternée */}
       <section id="experience" className="py-20 px-4">
@@ -195,13 +200,13 @@ export default function Home() {
               },
               {
                 id: 5,
-                title: "Application de Gestion de Tâches",
+                title: "Projet personnel : Maquette Figma d’un prototype de carte interactive.",
                 description:
-                  "Application permettant de créer, organiser et suivre des tâches avec des fonctionnalités de collaboration.",
-                image: "/placeholder.svg?height=300&width=600",
-                tags: ["React", "Redux", "Express"],
+                  "Cette maquette a été réalisée dans un objectif d’apprentissage, afin de me familiariser avec Figma et d’explorer ses fonctionnalités appliquées à un projet concret.",
+                image: "/projets/figma.png",
+                tags: ["Figma", "UI/UX Design", "Prototypage"],
                 githubUrl: "#",
-                demoUrl: "#",
+                demoUrl: "https://www.figma.com/proto/ofz4Zg24NmWNeCYb80855x/Dan-Maps?node-id=9-201&p=f&t=9rtEA5prv8UgNkxG-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A53&show-proto-sidebar=1",
               },
             ]}
           />
