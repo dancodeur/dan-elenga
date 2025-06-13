@@ -838,9 +838,9 @@ export function GithubActivity({ username = GITHUB_USERNAME }) {
                     className="flex items-center gap-2 p-1.5 bg-gray-50 dark:bg-zinc-800 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors"
                   >
                     <img 
-                      src={org.avatarUrl} 
-                      alt={org.login} 
-                      className="h-5 w-5 rounded-sm"
+                      src="./neyos.png"
+                      alt="Neyos Logo" 
+                      className="h-5 w-5 rounded-sm invert dark:invert-0"
                     />
                     <span className="text-xs font-medium text-gray-700 dark:text-zinc-300">
                       {org.login}
