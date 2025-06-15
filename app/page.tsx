@@ -413,6 +413,7 @@ export default function Home() {
                 <h3 className="text-md font-semibold text-gray-900 dark:text-zinc-300 mb-3">
                   MASTÈRE LEAD DEVELOPPEUR FULL STACK
                 </h3>
+                <h4 className="md:hidden font-semibold text-zinc-700 text-sm">IIM DIGITAL SCHOOL PARIS  -  PÔLE <br /> LÉONARD DE VINCI</h4>
                 <p className="md:hidden text-sm text-gray-500 dark:text-zinc-500 mb-2">2025 - 2027</p>
                 <p className="text-gray-700 dark:text-zinc-400">
                   Le mastère Développeur Fullstack a pour mission de former des développeuses et développeurs polyvalents ayant des connaissances utiles dans tous les environnements technologiques et à l’aise dans le développement utilisant différentes stacks techniques.
@@ -429,6 +430,7 @@ export default function Home() {
                 <h3 className="text-md font-semibold text-gray-900 dark:text-zinc-300 mb-3">
                   BACHELOR MÉTIERS DU MULTIMÉDIA ET DE L’INTERNET - PARCOURS DÉVELOPPEMENT WEB ET DISPOSITIFS INTERACTIFS
                 </h3>
+                <h4 className="md:hidden font-semibold text-zinc-700 text-sm">CY CERGY PARIS UNIVERSITÉ</h4>
                 <p className="md:hidden text-sm text-gray-500 dark:text-zinc-500 mb-2">2022 - 2025</p>
                 <p className="text-gray-700 dark:text-zinc-400">
                   Cette formation forme en 3 ans des des techniciens qualifiés capables de concevoir, réaliser et déployer des produits et services multimédias en utilisant les technologies numériques.
