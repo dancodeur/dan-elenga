@@ -82,7 +82,7 @@ export default function Home() {
 
         {/* GitHub Activity */}
         <div className="mt-12 w-full hidden md:block max-w-md animate-fade-in animation-delay-500">
-          <GithubActivity />
+          {/* <GithubActivity /> */}
         </div>
 
         <div className="absolute bottom-10 animate-bounce">
@@ -100,7 +100,7 @@ export default function Home() {
       </header>
 
       {/* GitHub Activity */}
-      <div className="mt-12 w- md:hidden  flex flex-col items-center justify-center px-4 max-w-md animate-fade-in animation-delay-500">
+      <div className="mt-12 md:mx-auto   flex flex-col items-center justify-center px-4 max-w-md animate-fade-in animation-delay-500">
         <GithubActivity/>
       </div>
 
@@ -127,7 +127,7 @@ export default function Home() {
                 type: "alternance",
                 description:
                   "Développement d'interfaces utilisateur pour des clients de divers secteurs. Collaboration avec les designers pour transformer des maquettes en sites web fonctionnels et responsives. Participation aux réunions client et aux sprints agiles.",
-                skills: ["Vue 3", "Nuxt", "TypeScript", "JavaScript", "Tailwind CSS", "Figma", "Git", "GitHub","Docker"],
+                skills: ["Vue 3", "Nuxt 3", "TypeScript", "JavaScript", "Tailwind CSS", "Figma", "Git", "GitHub","Docker", "Méthode Agile", "Accessibilité Web", "SEO","CI/CD"],
               },
               {
                 id: 2,
@@ -138,7 +138,7 @@ export default function Home() {
                 type: "stage",
                 description:
                   "Stage réalisé en 2ᵉ année du BUT MMI au sein de NEYOS, avec pour mission le développement full-stack d’outils web internes : intégration de fonctionnalités, maintenance applicative, tests et corrections de bugs.",
-                skills: ["JavaScript", "React", "Node.js", "Express", "Git", "GitHub", "Docker","Tailwind CSS","Leaflet","Socket.IO", "Figma","PHP", "MySQL", "Laravel"],
+                skills: ["JavaScript", "React", "Node.js", "Express", "Git", "GitHub", "Docker","Tailwind CSS","Leaflet","Socket.IO", "Adonis JS","CI/CD", "Figma","PHP", "MySQL", "Laravel"],
               },
             ]}
           />

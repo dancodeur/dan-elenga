@@ -3,7 +3,7 @@ export const translations = {
     header: {
       title: "Dan Elenga",
       subtitle:
-        "À la recherche d’une alternance à partir de septembre 2025 dans le cadre de mon Mastère Lead Développeur Full Stack — motivé à rejoindre une équipe pour relever de nouveaux défis.",
+        "Je suis à la recherche d’une alternance à partir de septembre 2025 dans le cadre de mon Mastère Lead Développeur Full Stack à l’IIM Digital School – Pôle Léonard de Vinci, avec un rythme de 3 semaines en entreprise et 1 semaine à l’école.",
       downloadCV: "Télécharger mon CV",
       githubActivity: "Activités GitHub",
     },
@@ -36,7 +36,7 @@ export const translations = {
   en: {
     header: {
       title: "Dan Elenga",
-      subtitle: "Looking for an apprenticeship starting in September 2025 as part of my Master’s in Lead Full Stack Development — eager to join a team and take on new challenges.",
+      subtitle: "I am looking for an apprenticeship starting in September 2025 as part of my Master’s in Lead Full Stack Development at IIM Digital School – Pôle Léonard de Vinci, with a schedule of 3 weeks in a company and 1 week at school.",
       downloadCV: "Download my CV",
       githubActivity: "GitHub Activity",
     },
