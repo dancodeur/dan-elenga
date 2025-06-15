@@ -413,7 +413,7 @@ export default function Home() {
                 <h3 className="text-md font-semibold text-gray-900 dark:text-zinc-300 mb-3">
                   MASTÈRE LEAD DEVELOPPEUR FULL STACK
                 </h3>
-                <h4 className="md:hidden font-semibold text-zinc-700 text-sm">IIM DIGITAL SCHOOL PARIS  -  PÔLE <br /> LÉONARD DE VINCI</h4>
+                <h4 className="md:hidden font-semibold text-zinc-700 text-sm">IIM DIGITAL SCHOOL PARIS  -  PÔLE LÉONARD <br /> DE VINCI</h4>
                 <p className="md:hidden text-sm text-gray-500 dark:text-zinc-500 mb-2">2025 - 2027</p>
                 <p className="text-gray-700 dark:text-zinc-400">
                   Le mastère Développeur Fullstack a pour mission de former des développeuses et développeurs polyvalents ayant des connaissances utiles dans tous les environnements technologiques et à l’aise dans le développement utilisant différentes stacks techniques.
