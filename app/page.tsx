@@ -406,7 +406,7 @@ export default function Home() {
           <div className="space-y-8">
             <div className="flex gap-6">
               <div className="hidden md:block w-24 md:w-[20rem] text-right text-gray-500 dark:text-zinc-500">
-                  <h3 className="text-md font-semibold text-gray-900 dark:text-zinc-300">IIM DIGITAL SCHOOL PARIS</h3>
+                  <h3 className="text-md font-semibold text-gray-900 dark:text-zinc-300">IIM DIGITAL SCHOOL PARIS - PÔLE LÉONARD DE VINCI</h3>
                   <span>2025 - 2027</span>
                </div>
               <div className="flex-1">
