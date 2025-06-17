@@ -82,7 +82,7 @@ export default function Home() {
 
         {/* Scroll Down Button */}
 
-        <div className="absolute bottom-10 animate-bounce">
+        <div className="absolute bottom-16 animate-bounce">
           <Button
             variant="ghost"
             size="icon"
