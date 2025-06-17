@@ -3,7 +3,7 @@ export const translations = {
     header: {
       title: "Dan Elenga",
       subtitle:
-        "Je suis à la recherche d’une alternance à partir de septembre 2025 dans le cadre de mon Mastère Lead Développeur Full Stack à l’IIM Digital School – Pôle Léonard de Vinci, avec un rythme de 3 semaines en entreprise et 1 semaine à l’école.",
+        "Je suis à la recherche d’une alternance à partir de septembre 2025, dans le cadre de mon Mastère Lead Développeur Full Stack à l’IIM Digital School - Pôle Léonard de Vinci. Le rythme est de 3 semaines en entreprise pour 1 semaine à l’école.",
       downloadCV: "Télécharger mon CV",
       githubActivity: "Activités GitHub",
     },
