@@ -5,10 +5,12 @@ import Link from "next/link"
 import { useScrollAnimation } from "@/hooks/use-scroll-animation"
 import { ProjectCarousel } from "@/components/project-carousel"
 import { AlternatingTimeline } from "@/components/alternating-timeline"
+import { ParticlesBackground } from "@/components/particles-background"
 import { GithubActivity } from "@/components/github-activity"
 import { ThemeLanguageSwitcher } from "@/components/theme-language-switcher"
 import { useLanguage } from "@/contexts/language-context"
 import { useTheme } from "@/contexts/theme-context"
+
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -31,6 +33,11 @@ export default function Home() {
         {/* Theme & Language Switcher */}
         <div className="absolute top-4 right-4">
           <ThemeLanguageSwitcher />
+        </div>
+
+        {/* Ajout des particules */}
+        <div className="particles-container">
+          <ParticlesBackground />
         </div>
 
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight animate-fade-in text-gray-900 dark:text-zinc-300">
