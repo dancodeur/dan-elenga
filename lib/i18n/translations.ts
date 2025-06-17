@@ -24,7 +24,7 @@ export const translations = {
     about: {
       title: "À propos",
       description:
-        "Je suis Dan Elenga, apprenti développeur web full-stack chez Neyos et étudiant en troisième année de Bachelor Métiers du Multimédia et de l’Internet, parcours Développement Web et Dispositifs Interactifs à CY Cergy Paris Université."
+        "Je suis Dan Elenga, apprenti développeur web full-stack chez Neyos. Je suis également étudiant en troisième année de Bachelor Métiers du Multimédia et de l’Internet, parcours Développement Web et Dispositifs Interactifs à CY Cergy Paris Université."
     },
     education: {
       title: "Formation",

@@ -80,10 +80,7 @@ export default function Home() {
           </Link>
         </Button>
 
-        {/* GitHub Activity */}
-        <div className="mt-12 w-full hidden md:block max-w-md animate-fade-in animation-delay-500">
-          {/* <GithubActivity /> */}
-        </div>
+        {/* Scroll Down Button */}
 
         <div className="absolute bottom-10 animate-bounce">
           <Button
