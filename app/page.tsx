@@ -43,6 +43,7 @@ export default function Home() {
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight animate-fade-in text-gray-900 dark:text-zinc-300">
           {t("title", "header")}
         </h1>
+        <h2 className="">{t("jobs", "header")}</h2>
         <p className="mt-4 text-xl md:text-2xl text-gray-600 dark:text-zinc-400 max-w-2xl animate-fade-in animation-delay-200">
           {t("subtitle", "header")}
         </p>

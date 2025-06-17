@@ -2,6 +2,7 @@ export const translations = {
   fr: {
     header: {
       title: "Dan Elenga",
+      jobs: "Développeur web Full Stack",
       subtitle:
         "Je suis à la recherche d’une alternance à partir de septembre 2025, dans le cadre de mon Mastère Lead Développeur Full Stack à l’IIM Digital School - Pôle Léonard de Vinci. Le rythme est de 3 semaines en entreprise pour 1 semaine à l’école.",
       downloadCV: "Télécharger mon CV",
@@ -36,6 +37,7 @@ export const translations = {
   en: {
     header: {
       title: "Dan Elenga",
+      jobs: "Full Stack Web Developer",
       subtitle: "I am looking for an apprenticeship starting in September 2025 as part of my Master’s in Lead Full Stack Development at IIM Digital School – Pôle Léonard de Vinci, with a schedule of 3 weeks in a company and 1 week at school.",
       downloadCV: "Download my CV",
       githubActivity: "GitHub Activity",
