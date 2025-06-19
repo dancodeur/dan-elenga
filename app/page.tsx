@@ -133,7 +133,7 @@ export default function Home() {
                 period: "Juil. 2024 - Présent",
                 type: "alternance",
                 description:
-                  "Au sein de NEYOS, je participe à la conception et au développement de l’interface front-end en Nuxt.js avec Tailwind CSS, je contribue au développement back-end avec Adonis.js. J’intègre également des cartes interactives via Nuxt-Leaflet. Je mets en place des composants réutilisables, des routes dynamiques, je collabore en équipe via GitHub, et je contribue à l’infrastructure de déploiement. ",
+                  "Au sein de NEYOS, je participe à la conception et au développement d’interfaces d’applications internes en Nuxt.js avec Tailwind CSS. Je contribue également au développement back-end avec Adonis.js, j’intègre des cartes interactives via Nuxt-Leaflet, je mets en place des composants réutilisables et des routes dynamiques, je collabore en équipe via GitHub, et je participe à l’infrastructure de déploiement.",
                 skills: ["Vue 3", "Nuxt 3", "TypeScript", "JavaScript", "Tailwind CSS", "Adonis.js","Leaflet",  "Figma", "Git", "Shell","WSL 2", "GitHub","Docker", "Méthode Agile", "Accessibilité Web", "SEO","CI/CD"],
               },
               {
