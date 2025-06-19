@@ -6,6 +6,7 @@ import { useScrollAnimation } from "@/hooks/use-scroll-animation"
 import { ProjectCarousel } from "@/components/project-carousel"
 import { AlternatingTimeline } from "@/components/alternating-timeline"
 import { ParticlesBackground } from "@/components/particles-background"
+import { NeonButton } from "@/components/neon-button"
 import { GithubActivity } from "@/components/github-activity"
 import { ThemeLanguageSwitcher } from "@/components/theme-language-switcher"
 import { useLanguage } from "@/contexts/language-context"
@@ -40,7 +41,7 @@ export default function Home() {
           <ParticlesBackground />
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tight animate-fade-in text-gray-900 dark:text-zinc-300">
+        <h1 className="animated-gradient-text text-5xl md:text-7xl font-bold tracking-tight animate-fade-in text-gray-900 dark:text-zinc-300">
           {t("title", "header")}
         </h1>
         <h2 className="">{t("jobs", "header")}</h2>
@@ -79,14 +80,15 @@ export default function Home() {
             </Link>
           </Button>
         </div>
-        <Button
-          className="mt-6 animate-fade-in animation-delay-400 bg-gray-900 hover:bg-gray-800 text-white dark:bg-zinc-800 dark:hover:bg-zinc-700"
-          asChild
-        >
-          <Link href="/Dan Elenga - CV.pdf " download>
-            {t("downloadCV", "header")}
-          </Link>
-        </Button>
+        {/* Download CV Button */}
+        <NeonButton 
+              href="/Dan Elenga - CV.pdf" 
+              download
+              size="lg"
+              className="mt-6 animate-fade-in animation-delay-400"
+            >
+          {t("downloadCV", "header")}
+        </NeonButton>
 
         {/* Scroll Down Button */}
 
@@ -125,14 +127,14 @@ export default function Home() {
             experiences={[
               {
                 id: 1,
-                title: "Développeur front-end",
+                title: "Développeur full stack",
                 company: "NEYOS",
                 location: "Paris",
                 period: "Juil. 2024 - Présent",
                 type: "alternance",
                 description:
-                  "Développement d'interfaces utilisateur pour des clients de divers secteurs. Collaboration avec les designers pour transformer des maquettes en sites web fonctionnels et responsives. Participation aux réunions client et aux sprints agiles.",
-                skills: ["Vue 3", "Nuxt 3", "TypeScript", "JavaScript", "Tailwind CSS", "Figma", "Git", "GitHub","Docker", "Méthode Agile", "Accessibilité Web", "SEO","CI/CD"],
+                  "Au sein de NEYOS, je participe à la conception et au développement de l’interface front-end en Nuxt.js avec Tailwind CSS, je contribue au développement back-end avec Adonis.js. J’intègre également des cartes interactives via Nuxt-Leaflet. Je mets en place des composants réutilisables, des routes dynamiques, je collabore en équipe via GitHub, et je contribue à l’infrastructure de déploiement. ",
+                skills: ["Vue 3", "Nuxt 3", "TypeScript", "JavaScript", "Tailwind CSS", "Adonis.js","Leaflet",  "Figma", "Git", "Shell","WSL 2", "GitHub","Docker", "Méthode Agile", "Accessibilité Web", "SEO","CI/CD"],
               },
               {
                 id: 2,
@@ -142,7 +144,7 @@ export default function Home() {
                 period: "Avril 2024 - Juin 2024",
                 type: "stage",
                 description:
-                  "Stage réalisé en 2ᵉ année du BUT MMI au sein de NEYOS, avec pour mission le développement full-stack d’outils web internes : intégration de fonctionnalités, maintenance applicative, tests et corrections de bugs.",
+                  "Stage réalisé en 2ᵉ année du BUT MMI au sein de NEYOS, avec pour mission le développement full-stack d’outils web internes : intégration de fonctionnalités en front-end avec React, conception d’API REST, gestion des données avec MySQL, maintenance applicative, tests et correction de bugs.",
                 skills: ["JavaScript", "React", "Node.js", "Express", "Git", "GitHub", "Docker","Tailwind CSS","Leaflet","Socket.IO", "Adonis JS","CI/CD", "Figma","PHP", "MySQL", "Laravel"],
               },
             ]}
@@ -216,14 +218,13 @@ export default function Home() {
             ]}
           />
           <div className="text-center mt-12">
-            <Button
-              asChild
-              className="bg-gray-900 hover:bg-gray-800 text-white dark:bg-zinc-800 dark:hover:bg-zinc-700"
-            >
-              <Link href="https://github.com/dancodeur" target="_blank">
-                {t("viewMore", "projects")}
-              </Link>
-            </Button>
+            <NeonButton
+                href="https://github.com/dancodeur"
+                target="_blank"
+                size="lg"
+              >
+              {t("viewMore", "projects")}
+            </NeonButton>
           </div>
         </div>
       </section>
