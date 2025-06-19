@@ -439,7 +439,7 @@ export default function Home() {
                 <h4 className="md:hidden font-semibold text-zinc-700 text-sm dark:text-zinc-400">CY CERGY PARIS UNIVERSITÉ</h4>
                 <p className="md:hidden text-sm text-gray-500 dark:text-zinc-500 mb-2">2022 - 2025</p>
                 <p className="text-gray-700 dark:text-zinc-400">
-                  Cette formation forme en 3 ans des des techniciens qualifiés capables de concevoir, réaliser et déployer des produits et services multimédias en utilisant les technologies numériques.
+                  Cette formation forme en 3 ans des techniciens qualifiés capables de concevoir, réaliser et déployer des produits et services multimédias en utilisant les technologies numériques.
                 </p>
               </div>
             </div>
